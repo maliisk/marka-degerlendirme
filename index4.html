@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marka Değerlendirme Sistemi</title>
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #34495e;
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            
+            --prog-red: #e74c3c;
+            --prog-orange: #e67e22;
+            --prog-yellow: #f1c40f;
+            --prog-green: #2ecc71;
+            --prog-empty: #ecf0f1;
+            --border-color: #d2d6dc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding-bottom: 50px;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header img.logo {
+            height: 35px;
+            width: auto;
+            margin-right: 15px;
+            background-color: transparent; 
+            object-fit: contain;
+        }
+
+        header h2 {
+            font-size: 1.2em;
+        }
+
+        .container {
+            max-width: 100%;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .brand-row {
+            display: grid;
+            grid-template-columns: 140px 1fr 100px;
+            align-items: center;
+            gap: 15px;
+            padding: 4px 0;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+            height: 30px;
+        }
+
+        .brand-row:last-child {
+            border-bottom: none;
+        }
+
+        .brand-name {
+            font-weight: bold;
+            font-size: 0.65em;
+            color: var(--primary-color);
+        }
+
+        .team-bar {
+            display: flex;
+            width: 100%;
+            height: 20px;
+            background-color: var(--prog-empty);
+            border: 1px solid var(--border-color);
+        }
+
+        .team-segment {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7em;
+            font-weight: bold;
+            color: #7f8c8d;
+            transition: all 0.3s ease;
+            border-right: 1px solid var(--border-color);
+        }
+
+        .team-segment:last-child {
+            border-right: none;
+        }
+
+        .team-segment.active {
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .action-group {
+            display: flex;
+            gap: 6px;
+        }
+
+        .vote-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 3px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-weight: bold;
+            flex: 1;
+            font-size: 0.69em;
+            transition: background 0.2s;
+        }
+
+        .vote-btn:hover { background-color: #1a252f; }
+
+        .info-btn {
+            background-color: #ecf0f1;
+            color: #7f8c8d;
+            border: 1px solid var(--border-color);
+            width: 28px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9em;
+            transition: all 0.2s;
+        }
+
+        .info-btn:hover {
+            background-color: #bdc3c7;
+            color: var(--primary-color);
+        }
+
+        .popup-container {
+            position: absolute;
+            background: white;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            border-radius: 6px;
+            padding: 20px;
+            z-index: 1000;
+            display: none;
+            width: 400px;
+        }
+
+        .modal-header {
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .info-text {
+            color: #555;
+            line-height: 1.5;
+            font-size: 0.85em;
+            text-align: justify;
+            margin-bottom: 15px;
+        }
+
+        .modal-subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 15px;
+            font-size: 0.85em;
+        }
+
+        select.team-select {
+            width: 100%;
+            padding: 8px;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .rating-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+            gap: 8px;
+        }
+
+        .rating-btn {
+            flex: 1;
+            height: 35px;
+            border: 1px solid var(--border-color);
+            background: #f8f9fa;
+            border-radius: 3px;
+            font-size: 1em;
+            font-weight: bold;
+            color: #555;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .rating-btn:hover { border-color: var(--accent-color); background: white; }
+        .rating-btn.selected {
+            background-color: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        textarea.comment-box {
+            width: 100%;
+            height: 80px;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            resize: none;
+            font-size: 0.85em;
+            margin-bottom: 10px;
+            outline: none;
+        }
+
+        textarea.comment-box:focus {
+            border-color: var(--accent-color);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .modal-btn.cancel { background-color: #ecf0f1; color: #7f8c8d; border: 1px solid var(--border-color); }
+        .modal-btn.cancel:hover { background-color: #e2e8f0; color: var(--primary-color); }
+
+        #questionText {
+            font-size: 0.95em;
+            text-align: center;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <img src="images.png" alt="Logo" class="logo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' fill=\'%23ccc\' viewBox=\'0 0 24 24\'><rect width=\'24\' height=\'24\' rx=\'4\'/></svg>'">
+        <h2>Değerlendirme Portalı</h2>
+    </header>
+
+    <main class="container">
+        <div id="brandsContainer"></div>
+    </main>
+
+    <div class="popup-container" id="infoPopup">
+        <div class="modal-header">Değerlendirme Kriterleri Hakkında</div>
+        <div class="info-text">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor.
+        </div>
+        <button class="modal-btn" onclick="closeInfoPopup()" style="width: 100%;">Anladım</button>
+    </div>
+
+    <div class="popup-container" id="votePopup">
+        
+        <div id="stepTeam">
+            <div class="modal-header" id="modalBrandNameHeader">Marka</div>
+            <div class="modal-subtitle">Hangi ekip adına değerlendirme yapıyorsunuz?</div>
+            <select id="teamSelection" class="team-select">
+                <option value="" disabled selected>Lütfen bir ekip seçin...</option>
+                <option value="jsDev">JsDev</option>
+                <option value="sat">SAT</option>
+                <option value="accexe">AccExe</option>
+                <option value="csm">CSM</option>
+            </select>
+            <div class="modal-actions">
+                <button class="modal-btn cancel" onclick="closeVotePopup()">İptal</button>
+                <button class="modal-btn" onclick="startQuestions()">Başla</button>
+            </div>
+        </div>
+
+        <div id="stepQuestions" style="display: none;">
+            <div class="modal-header" id="questionCounter">Soru 1 / X</div>
+            <div id="questionText">Soru metni buraya gelecek...</div>
+            
+            <div class="rating-container" id="ratingContainer">
+                <button class="rating-btn" onclick="selectRating(1)">1</button>
+                <button class="rating-btn" onclick="selectRating(2)">2</button>
+                <button class="rating-btn" onclick="selectRating(3)">3</button>
+                <button class="rating-btn" onclick="selectRating(4)">4</button>
+                <button class="rating-btn" onclick="selectRating(5)">5</button>
+            </div>
+
+            <div class="modal-actions">
+                <button class="modal-btn cancel" onclick="closeVotePopup()">İptal</button>
+                <button class="modal-btn" id="nextBtn" onclick="nextQuestion()">İleri</button>
+            </div>
+        </div>
+
+        <div id="stepComment" style="display: none;">
+            <div class="modal-header">Öneriniz var mı?</div>
+            <div class="modal-subtitle">Eklemek istediğiniz bir not veya yorum var mı?</div>
+            
+            <textarea class="comment-box" id="userComment" placeholder="Düşüncelerinizi buraya yazabilirsiniz..."></textarea>
+
+            <div class="modal-actions">
+                <button class="modal-btn cancel" onclick="closeVotePopup()">İptal</button>
+                <button class="modal-btn" style="background-color: var(--prog-green);" onclick="submitFinalVote()">Gönder</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const brands = [
+            "AVVA", "Pierre Cardin", "U.S. Polo Assn", "Cacharel", "GsStore", 
+            "Reebok", "Under Armour", "Instreet", "FLO", "Vivense", 
+            "Supplementler", "Yenibiriş", "Maje"
+        ];
+
+        const brandStats = brands.map(() => ({
+            totalScore: 0,
+            voteCount: 0,
+            teamScores: {
+                jsDev: { score: 0, count: 0 },
+                sat: { score: 0, count: 0 },
+                accexe: { score: 0, count: 0 },
+                csm: { score: 0, count: 0 }
+            }
+        }));
+
+        const teamQuestions = {
+            jsDev: [
+                { question: "Talepler net ve anlaşılırdı.", rank: 1, comment: false, intTeam: [""] },
+                { question: "Talepler yoğun-karmaşık-tekrarlı değildi.", rank: 1, comment: false, intTeam: [""] },
+                { question: "Kurgular zamanında tamamlandı, test edildi.", rank: 1, comment: false, intTeam: [""] },
+                { question: "Herhangi entegrasyon vs sorun görülmedi", rank: 1, comment: false, intTeam: [""] }    
+            ],
+            sat: [
+                { question: "Talepler net ve anlaşılırdı.", rank: 1, comment: false, intTeam: [""] },
+                { question: "Talepler yoğun-karmaşık-tekrarlı değildi.", rank: 1, comment: false, intTeam: [""] },
+                { question: "Raporlar zamanında tamamlandı, test edildi.", rank: 1, comment: false, intTeam: [""] },
+                { question: "Raporlar zamanında tamamlandı, test edildi.", rank: 1, comment: false, intTeam: [""] }  
+            ],
+            accexe: [ 
+                { question: "Talepler proaktif şekilde çözümlendi", rank: 1, comment: false, intTeam: [""] },
+                { question: "Talepler zamanında iletildi ve dönüş yapıldı.", rank: 1, comment: false, intTeam: [""] },
+                { question: "Müşteri memnuniyeti iyi seviyede.", rank: 1, comment: false, intTeam: [""] },
+                { question: "Müşteri genel yönetimi iyi seviyede.", rank: 1, comment: false, intTeam: [""] }
+            ],
+            csm: [
+                { question: "Herhangi IT sorunu bulunmamakta.", rank: 1, comment: false, intTeam: [""] },
+                { question: "Müşteri geri bildirimi iyi seviyede", rank: 1, comment: false, intTeam: [""] },
+                { question: "Talepler makul seviyede", rank: 1, comment: false, intTeam: [""] },
+                { question: "Yenilikçi-Oyun-Custom kurgu planları gündemde.", rank: 1, comment: false, intTeam: [""] }
+            ]
+        };
+
+        let currentBrandIndex = null;
+        let activeTeam = "";
+        let currentQIndex = 0;
+        let currentAnswers = []; 
+
+        const container = document.getElementById('brandsContainer');
+        const votePopup = document.getElementById('votePopup');
+        const infoPopup = document.getElementById('infoPopup');
+        const stepTeam = document.getElementById('stepTeam');
+        const stepQuestions = document.getElementById('stepQuestions');
+        const stepComment = document.getElementById('stepComment');
+
+        function renderBrands() {
+            container.innerHTML = '';
+            brands.forEach((brand, index) => {
+                const row = document.createElement('div');
+                row.className = 'brand-row';
+                
+                row.innerHTML = `
+                    <div class="brand-name">${brand}</div>
+                    <div class="team-bar" id="team-bar-${index}">
+                        <div class="team-segment jsdev" data-team="jsDev">JS</div>
+                        <div class="team-segment sat" data-team="sat">SAT</div>
+                        <div class="team-segment accexe" data-team="accexe">ACC</div>
+                        <div class="team-segment csm" data-team="csm">CSM</div>
+                        <div class="team-segment overall" data-team="overall" id="overall-score-${index}">-</div>
+                    </div>
+                    <div class="action-group">
+                        <button class="vote-btn" onclick="openVotePopup(event, ${index})">Oyla</button>
+                        <button class="info-btn" onclick="openInfoPopup(event)">i</button>
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function positionPopup(event, popupElement) {
+            const buttonRect = event.target.getBoundingClientRect();
+            const popupRect = popupElement.getBoundingClientRect();
+            
+            let top = buttonRect.bottom + window.scrollY + 10;
+            let left = buttonRect.left + window.scrollX - (popupRect.width || 400) + buttonRect.width;
+
+            if (left < 10) left = 10;
+
+            popupElement.style.top = `${top}px`;
+            popupElement.style.left = `${left}px`;
+        }
+
+        function openInfoPopup(event) {
+            closeVotePopup();
+            infoPopup.style.display = 'block';
+            positionPopup(event, infoPopup);
+        }
+
+        function closeInfoPopup() {
+            infoPopup.style.display = 'none';
+        }
+
+        function openVotePopup(event, brandIndex) {
+            closeInfoPopup();
+            currentBrandIndex = brandIndex;
+            document.getElementById('modalBrandNameHeader').innerText = `${brands[brandIndex]} Değerlendirmesi`;
+            
+            document.getElementById('teamSelection').value = "";
+            document.getElementById('userComment').value = "";
+            activeTeam = "";
+            currentQIndex = 0;
+            currentAnswers = [];
+            
+            stepTeam.style.display = 'block';
+            stepQuestions.style.display = 'none';
+            stepComment.style.display = 'none';
+            
+            votePopup.style.display = 'block';
+            positionPopup(event, votePopup);
+        }
+
+        function closeVotePopup() {
+            votePopup.style.display = 'none';
+        }
+
+        function startQuestions() {
+            const team = document.getElementById('teamSelection').value;
+            if (!team) return alert("Lütfen devam etmeden önce bir ekip seçin.");
+            
+            activeTeam = team;
+            currentAnswers = new Array(teamQuestions[activeTeam].length).fill(0);
+            currentQIndex = 0;
+
+            stepTeam.style.display = 'none';
+            stepQuestions.style.display = 'block';
+            
+            renderCurrentQuestion();
+        }
+
+        function renderCurrentQuestion() {
+            const totalQuestions = teamQuestions[activeTeam].length;
+            const qData = teamQuestions[activeTeam][currentQIndex];
+
+            document.getElementById('questionCounter').innerText = `Soru ${currentQIndex + 1} / ${totalQuestions}`;
+            document.getElementById('questionText').innerText = qData.question;
+
+            resetRatingButtons();
+        }
+
+        function selectRating(val) {
+            currentAnswers[currentQIndex] = val;
+            const buttons = document.querySelectorAll('.rating-btn');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            buttons[val - 1].classList.add('selected'); 
+        }
+
+        function resetRatingButtons() {
+            const buttons = document.querySelectorAll('.rating-btn');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+        }
+
+        function nextQuestion() {
+            if (currentAnswers[currentQIndex] === 0) {
+                return alert("Lütfen bir puan verin (1-5).");
+            }
+
+            const totalQuestions = teamQuestions[activeTeam].length;
+
+            if (currentQIndex < totalQuestions - 1) {
+                currentQIndex++;
+                renderCurrentQuestion();
+            } else {
+                stepQuestions.style.display = 'none';
+                stepComment.style.display = 'block';
+            }
+        }
+
+        function submitFinalVote() {
+            const currentVoteScore = currentAnswers.reduce((a, b) => a + b, 0);
+            const currentVoteAverage = currentVoteScore / currentAnswers.length;
+
+            brandStats[currentBrandIndex].totalScore += currentVoteAverage;
+            brandStats[currentBrandIndex].voteCount += 1;
+            
+            brandStats[currentBrandIndex].teamScores[activeTeam].score += currentVoteAverage;
+            brandStats[currentBrandIndex].teamScores[activeTeam].count += 1;
+
+            const teamAverage = brandStats[currentBrandIndex].teamScores[activeTeam].score / brandStats[currentBrandIndex].teamScores[activeTeam].count;
+
+            const teamBar = document.getElementById(`team-bar-${currentBrandIndex}`);
+            const targetSegment = teamBar.querySelector(`[data-team="${activeTeam}"]`);
+            targetSegment.classList.add('active');
+
+            let teamColorClass = "var(--prog-green)";
+            if (teamAverage <= 2.0) teamColorClass = "var(--prog-red)";
+            else if (teamAverage <= 3.0) teamColorClass = "var(--prog-orange)";
+            else if (teamAverage < 4.0) teamColorClass = "var(--prog-yellow)";
+            
+            targetSegment.style.backgroundColor = teamColorClass;
+
+            const overallAverage = brandStats[currentBrandIndex].totalScore / brandStats[currentBrandIndex].voteCount;
+            const overallSegment = document.getElementById(`overall-score-${currentBrandIndex}`);
+            
+            let overallColorClass = "var(--prog-green)";
+            if (overallAverage <= 2.0) overallColorClass = "var(--prog-red)";
+            else if (overallAverage <= 3.0) overallColorClass = "var(--prog-orange)";
+            else if (overallAverage < 4.0) overallColorClass = "var(--prog-yellow)";
+            
+            overallSegment.style.backgroundColor = overallColorClass;
+            overallSegment.classList.add('active');
+            overallSegment.innerText = overallAverage.toFixed(1);
+
+            closeVotePopup();
+        }
+
+        document.addEventListener('click', function(event) {
+            if (!votePopup.contains(event.target) && !event.target.classList.contains('vote-btn')) {
+                closeVotePopup();
+            }
+            if (!infoPopup.contains(event.target) && !event.target.classList.contains('info-btn')) {
+                closeInfoPopup();
+            }
+        });
+
+        window.onload = () => {
+            renderBrands();
+        };
+    </script>
+</body>
+</html>
