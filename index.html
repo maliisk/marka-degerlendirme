@@ -57,12 +57,19 @@
             font-size: 1.2em;
         }
 
+        #brandsContainer{
+            max-width: 1200px;
+            position: relative;
+            margin: 0 auto;   
+        }
+
         .container {
             max-width: 100%;
             background: var(--card-bg);
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            min-height: 100vh;
         }
 
         .brand-row {
@@ -73,7 +80,7 @@
             padding: 4px 0;
             border-bottom: 1px solid var(--border-color);
             position: relative;
-            height: 30px;
+            height: 40px;
         }
 
         .brand-row:last-child {
@@ -82,7 +89,7 @@
 
         .brand-name {
             font-weight: bold;
-            font-size: 0.65em;
+            font-size: 0.75em;
             color: var(--primary-color);
         }
 
@@ -299,10 +306,10 @@
             <div class="modal-header" id="modalBrandNameHeader">Marka</div>
             <div class="modal-subtitle">Hangi ekip adına değerlendirme yapıyorsunuz?</div>
             <select id="teamSelection" class="team-select">
-                <option value="" disabled selected>Lütfen bir ekip seçin...</option>
-                <option value="jsDev">JsDev</option>
+                <option value="" disabled selected>Mevcut Görevinizi seçin..</option>
+                <option value="jsDev">Javascript Developer</option>
                 <option value="sat">SAT</option>
-                <option value="accexe">AccExe</option>
+                <option value="accexe">Account Executive</option>
                 <option value="csm">CSM</option>
             </select>
             <div class="modal-actions">
@@ -413,7 +420,7 @@
                         <div class="team-segment sat" data-team="sat">SAT</div>
                         <div class="team-segment accexe" data-team="accexe">ACC</div>
                         <div class="team-segment csm" data-team="csm">CSM</div>
-                        <div class="team-segment overall" data-team="overall" id="overall-score-${index}">-</div>
+                        <div class="team-segment overall" data-team="overall" id="overall-score-${index}">Genel Ort.</div>
                     </div>
                     <div class="action-group">
                         <button class="vote-btn" onclick="openVotePopup(event, ${index})">Oyla</button>
